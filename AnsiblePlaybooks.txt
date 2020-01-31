@@ -1,0 +1,80 @@
+1) My first Playbook
+
+--- # My First YAML playbook
+- hosts: first
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+          - name: Install httpd on fedora
+            action: yum name=httpd state=installed
+
+2)Target section
+--- # My YAML Playbook
+- hosts: first
+  user: ansible
+  become: yes
+  connection: ssh
+  gather_facts: yes
+
+3)Task section
+--- # My YAML playbook
+- hosts: first
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+          - name: install httpd on fedora
+            action: yum name=httpd state=installed
+          - name: install mysql on fedora
+            action: yum name=mysql state=installed
+4)variables section
+--- # My first YAML PLAYBOOK
+- hosts: first
+  user: ansible
+  become: yes
+  connection: ssh
+  vars:
+          pkgname: httpd
+  tasks:
+          - name: install httpd server on centos
+            action: yum name='{{pkgname}}' state=installed
+5)handlers
+--- # MY YAML PLAYBOOK
+- hosts: first
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+          - name: install httpd server on RHEL
+            action: yum name=httpd state=installed
+            notify: restart httpd
+  handlers:
+          - name: restart httpd
+            action: service name=httpd state=restarted
+6) Loops
+--- # My LOOP PLAYBOOK
+- hosts: first
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+          - name: add a list of users
+            user: name='{{item}}' state=present
+            with_items:
+                    - Raj
+                    - Sai
+                    - Hari
+7) conditional
+--- # Condtional YAML Playbook
+- hosts: first
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+          - name: Install apache  for debian
+            command: apt-get -y install apache2
+            when: ansible_os_family == "Debian"
+          - name: Install apache for rhel
+            command: yum -y install httpd
+            when: ansible_os_family == "Redhat"
